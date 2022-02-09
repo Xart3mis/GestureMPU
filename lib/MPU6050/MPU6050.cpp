@@ -1,55 +1,54 @@
 #include "MPU6050.h"
 
-MPU6050::MPU6050(uint8_t address): AccelX(), AccelY(), AccelZ(), Temperature(), GyroX(), GyroY(), GyroZ(), _address(address){}
+MPU6050::MPU6050(uint8_t address) : AccelRaw(), Temperature(), GyroRaw(), _address(address) {}
 
-void MPU6050::_write_i2c(uint8_t deviceAddr, uint8_t regAddress, uint8_t data) {
-  Wire.beginTransmission(deviceAddr);
-  Wire.write(regAddress);
-  Wire.write(data);
-  Wire.endTransmission();
+void MPU6050::Init()
+{
+  i2c._write_i2c(_address, MPU6050_REGISTER_SIGNAL_PATH_RESET, 0x00); //00000000
+  i2c._write_i2c(_address, MPU6050_REGISTER_ACCEL_CONFIG, 0x00);      //00000000
+  i2c._write_i2c(_address, MPU6050_REGISTER_GYRO_CONFIG, 0x00);       //00000000
+  i2c._write_i2c(_address, MPU6050_REGISTER_SMPLRT_DIV, 0x07);        //01110000
+  i2c._write_i2c(_address, MPU6050_REGISTER_PWR_MGMT_1, 0x01);        //00010000
+  i2c._write_i2c(_address, MPU6050_REGISTER_PWR_MGMT_2, 0x00);        //00000000
+  i2c._write_i2c(_address, MPU6050_REGISTER_INT_ENABLE, 0x01);        //00010000
+  i2c._write_i2c(_address, MPU6050_REGISTER_USER_CTRL, 0x00);         //00000000
+  i2c._write_i2c(_address, MPU6050_REGISTER_FIFO_EN, 0x00);           //00000000
+  i2c._write_i2c(_address, MPU6050_REGISTER_CONFIG, 0x00);            //00000000
 }
 
-void MPU6050::Init() {
-  delay(150);
-  _write_i2c(_address, MPU6050_REGISTER_SIGNAL_PATH_RESET, 0x00);
-  _write_i2c(_address, MPU6050_REGISTER_ACCEL_CONFIG, 0x00);
-  _write_i2c(_address, MPU6050_REGISTER_GYRO_CONFIG, 0x00);
-  _write_i2c(_address, MPU6050_REGISTER_SMPLRT_DIV, 0x07);
-  _write_i2c(_address, MPU6050_REGISTER_PWR_MGMT_1, 0x01);
-  _write_i2c(_address, MPU6050_REGISTER_PWR_MGMT_2, 0x00);
-  _write_i2c(_address, MPU6050_REGISTER_INT_ENABLE, 0x01);
-  _write_i2c(_address, MPU6050_REGISTER_USER_CTRL, 0x00);
-  _write_i2c(_address, MPU6050_REGISTER_FIFO_EN, 0x00);
-  _write_i2c(_address, MPU6050_REGISTER_CONFIG, 0x00);
-  delay(150);
-}
-
-void MPU6050::poll() {
-  Wire.beginTransmission(_address);
-  Wire.write(MPU6050_REGISTER_ACCEL_XOUT_H);
-  Wire.endTransmission();
+void MPU6050::poll()
+{
+  // Wire.beginTransmission(_address);
+  // Wire.write(MPU6050_REGISTER_ACCEL_XOUT_H);
+  // Wire.endTransmission();
+  i2c._write_i2c(_address, MPU6050_REGISTER_ACCEL_XOUT_H, -1, false);
 
   Wire.requestFrom(_address, (size_t)14, true);
 
-  AccelX = (Wire.read() << 8) | Wire.read();
-  AccelY = (Wire.read() << 8) | Wire.read();
-  AccelZ = (Wire.read() << 8) | Wire.read();
+  AccelRaw.AxisX = i2c._read_parse16();
+  AccelRaw.AxisY = i2c._read_parse16();
+  AccelRaw.AxisZ = i2c._read_parse16();
 
-  Temperature = (Wire.read() << 8) | Wire.read();
+  Temperature = i2c._read_parse16();
 
-  GyroX = (Wire.read() << 8) | Wire.read();
-  GyroY = (Wire.read() << 8) | Wire.read();
-  GyroZ = (Wire.read() << 8) | Wire.read();
+  GyroRaw.AxisX = i2c._read_parse16();
+  GyroRaw.AxisY = i2c._read_parse16();
+  GyroRaw.AxisZ = i2c._read_parse16();
 }
 
-int16_t MPU6050::GetAccelX() { return AccelX; }
-int16_t MPU6050::GetAccelY() { return AccelY; }
-int16_t MPU6050::GetAccelZ() { return AccelZ; }
+Vector MPU6050::GetAccel()
+{
+  return AccelRaw;
+}
 
-int16_t MPU6050::GetTemperature() { return Temperature; }
+Vector MPU6050::GetGyro()
+{
+  return GyroRaw;
+}
 
-int16_t MPU6050::GetGyroX() { return GyroX; }
-int16_t MPU6050::GetGyroY() { return GyroY; }
-int16_t MPU6050::GetGyroZ() { return GyroZ; }
+int16_t MPU6050::GetTemperature()
+{
+  return Temperature;
+}
 
 MPU6050::~MPU6050() {}
