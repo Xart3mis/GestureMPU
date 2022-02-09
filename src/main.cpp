@@ -1,11 +1,12 @@
 #include <Arduino.h>
-#include<Wire.h>
+#include <Wire.h>
 
 #include "MPU6050.h"
 
 MPU6050 mpu = MPU6050(0x68);
 
-void setup(){
+void setup()
+{
 #ifdef ARDUINO_ARCH_STM32
   Wire.setSDA(PB9);
   Wire.setSCL(PB8);
@@ -16,7 +17,8 @@ void setup(){
   mpu.Init();
 }
 
-void loop() {
+void loop()
+{
   mpu.poll();
-  Serial.println(mpu.GetAccelX());
+  Serial.println(mpu.GetAccel().AxisX);
 }
