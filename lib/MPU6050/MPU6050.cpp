@@ -21,7 +21,7 @@ void MPU6050::poll()
   // Wire.beginTransmission(_address);
   // Wire.write(MPU6050_REGISTER_ACCEL_XOUT_H);
   // Wire.endTransmission();
-  i2c._write_i2c(_address, MPU6050_REGISTER_ACCEL_XOUT_H, -1, false);
+  i2c._write_i2c(_address, MPU6050_REGISTER_ACCEL_XOUT_H, -1);
 
   Wire.requestFrom(_address, (size_t)14, true);
 
