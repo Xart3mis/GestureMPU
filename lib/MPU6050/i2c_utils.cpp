@@ -8,11 +8,11 @@ i2c_utils::~i2c_utils()
 {
 }
 
-void i2c_utils::_write_i2c(uint8_t device_addr, uint8_t reg_addr, uint8_t data, bool write_data)
+void i2c_utils::_write_i2c(uint8_t device_addr, uint8_t reg_addr, uint8_t data)
 {
   Wire.beginTransmission(device_addr);
   Wire.write(reg_addr);
-  if (write_data)
+  if (data != -1)
     Wire.write(data);
   Wire.endTransmission();
 }

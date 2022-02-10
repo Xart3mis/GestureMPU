@@ -7,7 +7,7 @@
 class i2c_utils
 {
 public:
-    void _write_i2c(uint8_t device_addr, uint8_t reg_addr, uint8_t data, bool write_data = true);
+    void _write_i2c(uint8_t device_addr, uint8_t reg_addr, uint8_t data);
     int16_t _read_parse16();
     i2c_utils(/* args */);
     ~i2c_utils();
