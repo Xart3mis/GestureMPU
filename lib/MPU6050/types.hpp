@@ -10,6 +10,8 @@ typedef struct Vector
     int16_t AxisZ;
 } Vector;
 
+typedef Vector GyroOffsets_t;
+
 enum MPU_REGISTERS
 {
     MPU6050_REGISTER_SIGNAL_PATH_RESET = 0x68,

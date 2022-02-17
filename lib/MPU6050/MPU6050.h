@@ -21,6 +21,8 @@ public:
   Vector GetAccel();
   Vector GetGyro();
 
+  GyroOffsets_t CalcGyroOffsets();
+
   int16_t GetTemperature();
 
   void poll();

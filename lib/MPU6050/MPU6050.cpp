@@ -14,6 +14,8 @@ void MPU6050::Init()
   i2c._write_i2c(_address, MPU6050_REGISTER_USER_CTRL, 0x00);         //00000000
   i2c._write_i2c(_address, MPU6050_REGISTER_FIFO_EN, 0x00);           //00000000
   i2c._write_i2c(_address, MPU6050_REGISTER_CONFIG, 0x00);            //00000000
+
+  
 }
 
 void MPU6050::poll()
